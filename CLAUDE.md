@@ -27,3 +27,9 @@ Kotlin 2.x, Spring Boot 3, Gradle Kotlin DSL, JUnit 5, Testcontainers.
 - Do not change the signature of `updateBalance` inside `TimeDepositCalculator.kt` (name, parameter types, return type, visibility).
 - Refactor *around* these: extract new classes or strategies and call them from inside `updateBalance`.
 - If a task seems to require breaking either rule, stop and ask me instead of working around it.
+
+### Technical constraints
+
+## Rest APIs 
+- Start REST APIs with version, e.g. /v1/...
+- Embrace idempotency whenever possible

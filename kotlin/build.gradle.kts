@@ -72,12 +72,19 @@ springBoot {
 pitest {
     junit5PluginVersion.set("1.2.2")
     targetClasses.set(setOf("org.ikigaidigital.*"))
-    // Spring wiring/bootstrap glue (adapters.*) has no meaningful behavior to
-    // mutate -- it's framework configuration, not domain logic.
-    // TODO: revisit once adapters.* contains real logic (controllers,
-    // repositories with actual branching) rather than just @Bean wiring.
-    excludedClasses.set(setOf("org.ikigaidigital.adapters.*"))
+    // Pure Spring wiring/bootstrap glue has no meaningful behavior to mutate --
+    // it's framework configuration, not domain/application logic. Narrowed to
+    // just the @Configuration classes and the @SpringBootApplication entry
+    // point; adapters.persistence/adapters.web now hold real logic (SQL,
+    // controller behavior) and are deliberately NOT excluded.
+    excludedClasses.set(
+        setOf(
+            "org.ikigaidigital.adapters.config.*",
+            "org.ikigaidigital.adapters.TimeDepositApplicationKt",
+        ),
+    )
     mutationThreshold.set(90) // build fails below 90% killed mutants
+    verbose.set(true)
     outputFormats.set(setOf("HTML", "XML"))
     timestampedReports.set(false)
 }
