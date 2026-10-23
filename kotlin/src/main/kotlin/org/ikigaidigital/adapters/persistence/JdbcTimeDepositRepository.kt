@@ -12,6 +12,9 @@ class JdbcTimeDepositRepository(
         jdbcTemplate.query("SELECT id, plan_type, days, balance FROM time_deposits", TimeDepositRowMapper)
 
     override fun saveAll(deposits: List<TimeDeposit>) {
+        // Row-by-row, no batching, and an update matching zero rows (e.g. the
+        // row was deleted between findAll and saveAll) is silently ignored --
+        // acceptable for this task's scaffolding-level scope.
         for (deposit in deposits) {
             jdbcTemplate.update(
                 "UPDATE time_deposits SET plan_type = ?, days = ?, balance = ? WHERE id = ?",

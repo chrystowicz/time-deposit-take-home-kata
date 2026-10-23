@@ -84,7 +84,13 @@ pitest {
         ),
     )
     mutationThreshold.set(90) // build fails below 90% killed mutants
-    verbose.set(true)
+    // PIT forks its own JVM ("minion") for the coverage/mutation runs, which
+    // does NOT inherit tasks.test's systemProperty -- without this, the
+    // Testcontainers-backed tests (SpringContextIntegrationTest,
+    // JdbcTimeDepositRepositoryTest, UpdateBalancesEndpointAcceptanceTest)
+    // silently report zero coverage under PIT (DockerAvailableCondition
+    // correctly, but misleadingly, treats Docker as unreachable there).
+    jvmArgs.set(listOf("-Dapi.version=1.44"))
     outputFormats.set(setOf("HTML", "XML"))
     timestampedReports.set(false)
 }
