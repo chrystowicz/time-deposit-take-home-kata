@@ -10,6 +10,21 @@ info:
     declaring its own routing annotations.
   version: "1.0"
 paths:
+  /api/v1/time-deposits:
+    get:
+      operationId: getAllTimeDeposits
+      tags:
+        - TimeDeposits
+      summary: Retrieve every time deposit in the database, with its withdrawals.
+      responses:
+        "200":
+          description: Every time deposit currently in the database.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TimeDepositResponse"
   /api/v1/time-deposits/balance-updates:
     post:
       operationId: updateBalances
@@ -19,3 +34,37 @@ paths:
       responses:
         "204":
           description: Balances were updated successfully. No response body.
+components:
+  schemas:
+    TimeDepositResponse:
+      type: object
+      required:
+        - id
+        - planType
+        - balance
+        - days
+        - withdrawals
+      properties:
+        id:
+          type: integer
+        planType:
+          type: string
+        balance:
+          type: number
+        days:
+          type: integer
+        withdrawals:
+          type: array
+          items:
+            $ref: "#/components/schemas/WithdrawalResponse"
+    WithdrawalResponse:
+      type: object
+      required:
+        - amount
+        - date
+      properties:
+        amount:
+          type: number
+        date:
+          type: string
+          format: date
