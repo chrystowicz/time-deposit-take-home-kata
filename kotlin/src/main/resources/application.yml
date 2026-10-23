@@ -1,0 +1,13 @@
+# The defaults below (username/password "timedeposit") are for local dev and
+# docker-compose only. Any real deployment must set SPRING_DATASOURCE_* env
+# vars explicitly -- do not rely on these fallbacks past local scaffolding.
+spring:
+  application:
+    name: time-deposit-kata
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/timedeposit}
+    username: ${SPRING_DATASOURCE_USERNAME:timedeposit}
+    password: ${SPRING_DATASOURCE_PASSWORD:timedeposit}
+
+server:
+  port: ${SERVER_PORT:8080}

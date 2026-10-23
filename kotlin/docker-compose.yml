@@ -1,0 +1,29 @@
+# Local dev/scaffolding only -- credentials below are not meant for any real
+# deployment; override via env vars (or a .env file kept out of version
+# control) for anything beyond running this on your own machine.
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/timedeposit
+      SPRING_DATASOURCE_USERNAME: timedeposit
+      SPRING_DATASOURCE_PASSWORD: timedeposit
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: timedeposit
+      POSTGRES_USER: timedeposit
+      POSTGRES_PASSWORD: timedeposit
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U timedeposit -d timedeposit"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
