@@ -1,3 +1,9 @@
+---
+name: ub-mode
+description: Implement one requirement from the task spec using plan → test → code → review, promoted by Uncle Bob
+disable-model-invocation: true
+---
+
 Every time you are asked to make a change follow:
 * First Make it Work.
 * Then Make it Right.

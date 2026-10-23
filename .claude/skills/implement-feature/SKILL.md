@@ -1,6 +1,7 @@
 ---
 name: implement-feature
 description: Implement one requirement from the task spec using plan → test → code → review.
+disable-model-invocation: true
 ---
 1. Read the requirement and restate it in your own words. List any assumptions.
 2. Propose a short plan and wait for my approval.
