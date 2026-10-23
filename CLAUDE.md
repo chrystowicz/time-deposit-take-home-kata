@@ -5,6 +5,7 @@ Kotlin 2.x, Spring Boot 3, Gradle Kotlin DSL, JUnit 5, Testcontainers.
 - Build: ./gradlew build
 - Test: ./gradlew test
 - Lint: ./gradlew ktlintCheck
+- PIT: ./gradlew pitest
 
 ## Rules
 - TDD: write a failing test first, then the implementation.
