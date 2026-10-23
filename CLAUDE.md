@@ -9,6 +9,10 @@ Kotlin 2.x, Spring Boot 3, Gradle Kotlin DSL, JUnit 5, Testcontainers.
 
 ## Rules
 - TDD: write a failing test first, then the implementation.
+- If an honest test is impractical, do not write a bad one.
+- Keep the business logic in a pure function.
+- Make Operations idempotent - running it twice, or running it after a crash halfway through, ends in the same state.
+- Follow SOLID principles, embrace small, focused unit tests, and prioritize testing business logic over dependencies. Use mocks if needed.
 - No new dependencies without asking me.
 - Keep domain logic free of framework annotations (hexagonal layout: domain / application / adapters).
 - Never edit generated files or anything under build/.
