@@ -16,6 +16,8 @@ class JdbcTimeDepositRepository(
     override fun saveAll(deposits: List<TimeDeposit>) {
         // Row-by-row, no batching, and an update matching zero rows (e.g. the
         // row was deleted between findAll and saveAll) is silently ignored
+
+        // also we can have here obvious race conditions, so it should be solved somehow (default isolation level won't cover that)
         for (deposit in deposits) {
             val entity = deposit.toEntity()
             jdbcTemplate.update(
