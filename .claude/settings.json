@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": ["Bash(./gradlew test:*)", "Bash(./gradlew build:*)", "Bash(git diff:*)", "Bash(git status)"],
+    "deny": ["Read(./.env)", "Bash(git push:*)"]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [{ "type": "command", "command": "./gradlew ktlintFormat -q" }]
+      }
+    ]
+  }
+}
