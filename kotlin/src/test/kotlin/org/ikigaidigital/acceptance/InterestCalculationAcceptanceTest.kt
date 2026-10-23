@@ -130,5 +130,12 @@ class InterestCalculationAcceptanceTest :
                     deposit.balance shouldBe 1004.17
                 }
             }
+            When("it is much older than 45 days") {
+                val deposit = TimeDeposit(3, "premium", 1000.00, 365)
+                calculator.updateBalance(listOf(deposit))
+                Then("it still earns the same 5% monthly interest, with no cutoff") {
+                    deposit.balance shouldBe 1004.17
+                }
+            }
         }
     })

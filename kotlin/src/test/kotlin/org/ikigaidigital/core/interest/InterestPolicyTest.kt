@@ -44,6 +44,7 @@ class InterestPolicyTest {
         "30, 1000.00, 0.0",
         "45, 1000.00, 0.0",
         "46, 1000.00, 4.166666666666667",
+        "365, 1000.00, 4.166666666666667",
     )
     fun `PremiumInterestPolicy pays 5 percent annual interest, monthly, once older than 45 days`(
         days: Int,

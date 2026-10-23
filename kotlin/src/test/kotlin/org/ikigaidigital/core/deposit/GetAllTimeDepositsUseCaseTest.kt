@@ -30,6 +30,21 @@ class GetAllTimeDepositsUseCaseTest {
     }
 
     @Test
+    fun `a time deposit with multiple withdrawals gets every one of them, not just one`() {
+        val deposit = TimeDeposit(1, "basic", 1000.00, 31)
+        val withdrawal1 = Withdrawal(1, timeDepositId = 1, amount = 100.0, date = LocalDate.of(2024, 1, 15))
+        val withdrawal2 = Withdrawal(2, timeDepositId = 1, amount = 50.0, date = LocalDate.of(2024, 2, 1))
+        whenever(timeDepositRepository.findAll()).thenReturn(listOf(deposit))
+        whenever(withdrawalRepository.findAll()).thenReturn(listOf(withdrawal1, withdrawal2))
+
+        val result = useCase.getAll()
+
+        assertThat(result).containsExactly(
+            TimeDepositWithWithdrawals(deposit, listOf(withdrawal1, withdrawal2)),
+        )
+    }
+
+    @Test
     fun `a time deposit with no withdrawals gets an empty list, not a missing entry`() {
         val deposit = TimeDeposit(1, "basic", 1000.00, 31)
         whenever(timeDepositRepository.findAll()).thenReturn(listOf(deposit))
