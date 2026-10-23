@@ -85,6 +85,14 @@ val openApiGeneratedDir =
         .get()
         .asFile
 
+kotlin {
+    sourceSets["main"].kotlin.srcDir(openApiGeneratedDir.resolve("src/main/kotlin"))
+}
+
+tasks.named("compileKotlin") {
+    dependsOn("openApiGenerate")
+}
+
 openApiGenerate {
     generatorName.set("kotlin-spring")
     // toURI().toString() (a file:/// URL), not plain toString(): the plugin's
