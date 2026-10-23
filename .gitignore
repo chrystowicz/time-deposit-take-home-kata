@@ -1,5 +1,7 @@
 node_modules/
 target/
+build/
+.gradle/
 .DS_Store
 bin/
 obj/
