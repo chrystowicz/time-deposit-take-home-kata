@@ -12,12 +12,12 @@ interface InterestPolicyResolver {
  * not touching [TimeDepositCalculator].
  */
 class PlanTypeInterestPolicyResolver(
-    private val policiesByPlanType: Map<String, InterestPolicy> = mapOf(
-        "basic" to BasicInterestPolicy,
-        "student" to StudentInterestPolicy,
-        "premium" to PremiumInterestPolicy,
-    ),
+    private val policiesByPlanType: Map<String, InterestPolicy> =
+        mapOf(
+            "basic" to BasicInterestPolicy,
+            "student" to StudentInterestPolicy,
+            "premium" to PremiumInterestPolicy,
+        ),
 ) : InterestPolicyResolver {
-    override fun resolve(planType: String): InterestPolicy =
-        policiesByPlanType[planType] ?: NoInterestPolicy
+    override fun resolve(planType: String): InterestPolicy = policiesByPlanType[planType] ?: NoInterestPolicy
 }

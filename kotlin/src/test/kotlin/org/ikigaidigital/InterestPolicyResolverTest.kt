@@ -5,7 +5,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 
 class InterestPolicyResolverTest {
-
     private val resolver: InterestPolicyResolver = PlanTypeInterestPolicyResolver()
 
     @ParameterizedTest(name = "{0} resolves to {1}")
@@ -14,13 +13,17 @@ class InterestPolicyResolverTest {
         "student, StudentInterestPolicy",
         "premium, PremiumInterestPolicy",
     )
-    fun `resolves each known plan type to its own policy`(planType: String, expectedPolicyName: String) {
-        val expectedPolicy = when (expectedPolicyName) {
-            "BasicInterestPolicy" -> BasicInterestPolicy
-            "StudentInterestPolicy" -> StudentInterestPolicy
-            "PremiumInterestPolicy" -> PremiumInterestPolicy
-            else -> error("unexpected policy name: $expectedPolicyName")
-        }
+    fun `resolves each known plan type to its own policy`(
+        planType: String,
+        expectedPolicyName: String,
+    ) {
+        val expectedPolicy =
+            when (expectedPolicyName) {
+                "BasicInterestPolicy" -> BasicInterestPolicy
+                "StudentInterestPolicy" -> StudentInterestPolicy
+                "PremiumInterestPolicy" -> PremiumInterestPolicy
+                else -> error("unexpected policy name: $expectedPolicyName")
+            }
 
         assertThat(resolver.resolve(planType)).isSameAs(expectedPolicy)
     }

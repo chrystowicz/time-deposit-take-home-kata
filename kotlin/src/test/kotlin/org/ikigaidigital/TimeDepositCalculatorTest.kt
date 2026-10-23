@@ -17,7 +17,6 @@ import org.mockito.kotlin.whenever
  * both collaborators and verifies the orchestration itself.
  */
 class TimeDepositCalculatorTest {
-
     private val policyResolver = mock<InterestPolicyResolver>()
     private val currencyRounder = mock<CurrencyRounder>()
     private val calculator = TimeDepositCalculator(policyResolver, currencyRounder)

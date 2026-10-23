@@ -4,7 +4,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class TimeDepositContractTest {
-
     @Test
     fun `public API of TimeDeposit and updateBalance stays unchanged`() {
         // Compiles only while the constructor and updateBalance keep their current signatures.

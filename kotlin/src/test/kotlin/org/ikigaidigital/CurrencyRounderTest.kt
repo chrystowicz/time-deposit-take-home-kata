@@ -5,7 +5,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 
 class CurrencyRounderTest {
-
     private val rounder: CurrencyRounder = HalfUpCurrencyRounder()
 
     @ParameterizedTest(name = "{0} rounds to {1}")
@@ -18,7 +17,10 @@ class CurrencyRounderTest {
         // above the 1.005 midpoint, so HALF_UP rounds it to 1.01.
         "1.0050000000000001, 1.01",
     )
-    fun `rounds to two decimal places using half-up rounding`(raw: Double, expected: Double) {
+    fun `rounds to two decimal places using half-up rounding`(
+        raw: Double,
+        expected: Double,
+    ) {
         assertThat(rounder.round(raw)).isEqualTo(expected)
     }
 }

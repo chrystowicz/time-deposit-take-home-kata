@@ -10,6 +10,5 @@ interface CurrencyRounder {
 
 /** Rounds to 2 decimal places, half-up. */
 class HalfUpCurrencyRounder : CurrencyRounder {
-    override fun round(amount: Double): Double =
-        BigDecimal(amount).setScale(2, RoundingMode.HALF_UP).toDouble()
+    override fun round(amount: Double): Double = BigDecimal(amount).setScale(2, RoundingMode.HALF_UP).toDouble()
 }

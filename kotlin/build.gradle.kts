@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "2.3.0"
     id("info.solidsoft.pitest") version "1.19.0"
+    id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
 }
 
 group = "org.ikigaidigital"
@@ -30,7 +31,7 @@ tasks.test {
 pitest {
     junit5PluginVersion.set("1.2.2")
     targetClasses.set(setOf("org.ikigaidigital.*"))
-    mutationThreshold.set(90)          // build fails below 90% killed mutants
+    mutationThreshold.set(90) // build fails below 90% killed mutants
     outputFormats.set(setOf("HTML", "XML"))
     timestampedReports.set(false)
 }

@@ -5,7 +5,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 
 class InterestPolicyTest {
-
     @ParameterizedTest(name = "basic, {0} days: balance {1} -> raw interest {2}")
     @CsvSource(
         "30, 1000.00, 0.0",
@@ -61,7 +60,10 @@ class InterestPolicyTest {
         "Basic, 1000",
         "STUDENT, 1000",
     )
-    fun `NoInterestPolicy pays nothing, regardless of balance or days`(planType: String, days: Int) {
+    fun `NoInterestPolicy pays nothing, regardless of balance or days`(
+        planType: String,
+        days: Int,
+    ) {
         val deposit = TimeDeposit(1, planType, 1_000_000.00, days)
 
         assertThat(NoInterestPolicy.monthlyInterest(deposit)).isEqualTo(0.0)
