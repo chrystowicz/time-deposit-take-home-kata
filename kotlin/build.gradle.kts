@@ -5,6 +5,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.7"
     id("info.solidsoft.pitest") version "1.19.0"
     id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
+    id("org.openapi.generator") version "7.26.0"
 }
 
 group = "org.ikigaidigital"
@@ -36,6 +37,11 @@ dependencies {
     // actually running as a service.
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
+    // Compile-time only: the openapi-generator kotlin-spring templates emit
+    // @Validated/ConstraintViolationException references unconditionally
+    // (independent of whether the spec has any validated parameters). No
+    // validation provider is pulled in since nothing in this API triggers it.
+    implementation("jakarta.validation:jakarta.validation-api")
     runtimeOnly("org.postgresql:postgresql")
 
     testImplementation(kotlin("test-junit5"))
@@ -65,6 +71,58 @@ tasks.test {
     systemProperty("api.version", "1.44")
 }
 
+// Contract-first: src/main/resources/openapi/time-deposit-api.yaml is the
+// single source of truth for the API shape. This generates a Spring MVC
+// interface (routing annotations, no implementation) per path, which
+// TimeDepositController implements. Changing an existing operation's
+// signature here forces a compile error in the controller; it does NOT by
+// itself force every operation to be implemented (kotlin-spring's generated
+// interfaces have default, non-abstract method bodies) -- see
+// TimeDepositControllerContractTest for that guard.
+val openApiGeneratedDir =
+    layout.buildDirectory
+        .dir("generated/openapi")
+        .get()
+        .asFile
+
+openApiGenerate {
+    generatorName.set("kotlin-spring")
+    // toURI().toString() (a file:/// URL), not plain toString(): the plugin's
+    // relative-path resolution for inputSpec is otherwise inconsistent
+    // between `openApiGenerate` and `openApiValidate`/IDE invocations.
+    inputSpec.set(file("src/main/resources/openapi/time-deposit-api.yaml").toURI().toString())
+    outputDir.set(openApiGeneratedDir.path)
+    apiPackage.set("org.ikigaidigital.adapters.web.generated")
+    modelPackage.set("org.ikigaidigital.adapters.web.generated.model")
+    configOptions.set(
+        mapOf(
+            // Generates an interface with the routing annotations only --
+            // no controller/business logic -- for TimeDepositController to
+            // implement, rather than a full generated controller.
+            "interfaceOnly" to "true",
+            "useTags" to "true",
+            "useSpringBoot3" to "true",
+            // No springdoc/swagger-annotations dependency in this project --
+            // skip generating @Operation/@ApiResponse annotations and the
+            // SpringDocConfiguration helper class that would otherwise need it.
+            "documentationProvider" to "none",
+            "annotationLibrary" to "none",
+            "generateJsonIncludeAnnotations" to "false",
+            "generateJsonSetterNullsAnnotations" to "false",
+        ),
+    )
+}
+
+// Deliberately NOT added via sourceSets.main.kotlin.srcDir: that would also
+// put this generated code in front of ktlint (which iterates registered
+// sourceSets), forcing either lint failures on code we don't own or a filter
+// workaround. Instead, only compileKotlin is told about the extra sources --
+// ktlint never sees this directory at all.
+tasks.named<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>("compileKotlin") {
+    dependsOn("openApiGenerate")
+    source(openApiGeneratedDir.resolve("src/main/kotlin"))
+}
+
 springBoot {
     mainClass.set("org.ikigaidigital.adapters.TimeDepositApplicationKt")
 }
@@ -81,6 +139,15 @@ pitest {
         setOf(
             "org.ikigaidigital.adapters.config.*",
             "org.ikigaidigital.adapters.TimeDepositApplicationKt",
+            // openapi-generator's own boilerplate (exception handling,
+            // ApiUtil, and the generated Api interfaces' default 501 method
+            // bodies) -- not code we wrote, nothing meaningful to mutate.
+            // Confirmed via a real pitest run before this exclusion existed:
+            // 3 survived mutants, all inside this package. Once the spec
+            // grows request/response bodies, generated model classes will
+            // land under adapters.web.generated.model -- verify this glob
+            // still covers them (or exclude that subpackage explicitly).
+            "org.ikigaidigital.adapters.web.generated.*",
         ),
     )
     mutationThreshold.set(90) // build fails below 90% killed mutants

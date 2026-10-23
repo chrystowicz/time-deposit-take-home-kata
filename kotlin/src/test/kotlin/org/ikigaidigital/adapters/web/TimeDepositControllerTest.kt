@@ -28,7 +28,7 @@ class TimeDepositControllerTest {
     @Test
     fun `POST to the balance-updates endpoint triggers the use case and returns 204`() {
         mockMvc
-            .perform(post("/api/time-deposits/balance-updates").contentType(MediaType.APPLICATION_JSON))
+            .perform(post("/api/v1/time-deposits/balance-updates").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent)
 
         verify(updateTimeDepositBalancesUseCase).updateAllBalances()

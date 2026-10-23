@@ -1,0 +1,21 @@
+openapi: 3.0.3
+info:
+  title: Time Deposit API
+  description: >
+    XA Bank time deposit management API. This file is the single source of
+    truth for the contract -- the server-side interfaces under
+    org.ikigaidigital.adapters.web.generated are generated from it at build
+    time (see build.gradle.kts's openApiGenerate task), and
+    TimeDepositController implements the generated interface rather than
+    declaring its own routing annotations.
+  version: "1.0"
+paths:
+  /api/v1/time-deposits/balance-updates:
+    post:
+      operationId: updateBalances
+      tags:
+        - TimeDeposits
+      summary: Apply this period's interest to every time deposit in the database.
+      responses:
+        "204":
+          description: Balances were updated successfully. No response body.

@@ -57,7 +57,7 @@ class UpdateBalancesEndpointAcceptanceTest : AbstractPostgresIntegrationTest() {
             5000.00,
         )
 
-        val response = restTemplate.postForEntity("/api/time-deposits/balance-updates", null, Void::class.java)
+        val response = restTemplate.postForEntity("/api/v1/time-deposits/balance-updates", null, Void::class.java)
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.NO_CONTENT)
         val basicBalance =
