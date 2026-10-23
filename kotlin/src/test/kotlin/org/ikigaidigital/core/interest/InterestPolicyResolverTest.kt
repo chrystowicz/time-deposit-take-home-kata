@@ -1,11 +1,11 @@
-package org.ikigaidigital
+package org.ikigaidigital.core.interest
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 
 class InterestPolicyResolverTest {
-    private val resolver: InterestPolicyResolver = PlanTypeInterestPolicyResolver()
+    private val resolver: InterestPolicyResolver = InterestPolicyResolver()
 
     @ParameterizedTest(name = "{0} resolves to {1}")
     @CsvSource(

@@ -1,10 +1,10 @@
 package org.ikigaidigital.adapters.web
 
 import org.ikigaidigital.TimeDeposit
-import org.ikigaidigital.Withdrawal
-import org.ikigaidigital.application.GetAllTimeDepositsUseCase
-import org.ikigaidigital.application.TimeDepositWithWithdrawals
-import org.ikigaidigital.application.UpdateTimeDepositBalancesUseCase
+import org.ikigaidigital.core.deposit.GetAllTimeDepositsUseCase
+import org.ikigaidigital.core.deposit.TimeDepositWithWithdrawals
+import org.ikigaidigital.core.deposit.UpdateTimeDepositBalancesUseCase
+import org.ikigaidigital.core.deposit.Withdrawal
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -40,7 +40,7 @@ class TimeDepositControllerTest {
     @Test
     fun `POST to the balance-updates endpoint triggers the use case and returns 204`() {
         mockMvc
-            .perform(post("/api/v1/time-deposits/balance-updates").contentType(MediaType.APPLICATION_JSON))
+            .perform(post("/v1/time-deposits/balance-updates").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent)
 
         verify(updateTimeDepositBalancesUseCase).updateAllBalances()
@@ -54,7 +54,7 @@ class TimeDepositControllerTest {
             .thenReturn(listOf(TimeDepositWithWithdrawals(deposit, listOf(withdrawal))))
 
         mockMvc
-            .perform(get("/api/v1/time-deposits"))
+            .perform(get("/v1/time-deposits"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$[0].id").value(1))
@@ -70,7 +70,7 @@ class TimeDepositControllerTest {
         whenever(getAllTimeDepositsUseCase.getAll()).thenReturn(emptyList())
 
         mockMvc
-            .perform(get("/api/v1/time-deposits"))
+            .perform(get("/v1/time-deposits"))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$").isArray)
             .andExpect(jsonPath("$").isEmpty)

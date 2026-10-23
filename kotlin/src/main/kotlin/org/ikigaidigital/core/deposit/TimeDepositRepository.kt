@@ -1,8 +1,7 @@
-package org.ikigaidigital.application
+package org.ikigaidigital.core.deposit
 
 import org.ikigaidigital.TimeDeposit
 
-/** Port for loading and persisting time deposits. Implemented by an adapter. */
 interface TimeDepositRepository {
     fun findAll(): List<TimeDeposit>
 

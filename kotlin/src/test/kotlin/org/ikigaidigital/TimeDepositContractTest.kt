@@ -1,6 +1,9 @@
 package org.ikigaidigital
 
 import org.assertj.core.api.Assertions.assertThat
+import org.ikigaidigital.core.deposit.TimeDepositCalculator
+import org.ikigaidigital.core.interest.InterestPolicyResolver
+import org.ikigaidigital.core.utils.HalfUpCurrencyRounder
 import org.junit.jupiter.api.Test
 
 class TimeDepositContractTest {
@@ -8,7 +11,11 @@ class TimeDepositContractTest {
     fun `public API of TimeDeposit and updateBalance stays unchanged`() {
         // Compiles only while the constructor and updateBalance keep their current signatures.
         val deposit = TimeDeposit(1, "basic", 1234567.00, 45)
-        val calculator = TimeDepositCalculator()
+        val calculator =
+            TimeDepositCalculator(
+                InterestPolicyResolver(),
+                HalfUpCurrencyRounder(),
+            )
         calculator.updateBalance(listOf(deposit))
     }
 
@@ -18,10 +25,4 @@ class TimeDepositContractTest {
 
         assertThat(deposit.id).isEqualTo(42)
     }
-
-    // End-to-end verification that TimeDepositCalculator()'s default collaborators
-    // (PlanTypeInterestPolicyResolver, HalfUpCurrencyRounder) are wired together
-    // correctly and produce the right balances now lives in
-    // InterestCalculationAcceptanceTest, which covers every business-rule boundary
-    // rather than just a single case per plan.
 }

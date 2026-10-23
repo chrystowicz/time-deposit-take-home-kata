@@ -1,16 +1,12 @@
-package org.ikigaidigital.application
+package org.ikigaidigital.core.deposit
 
-/** Retrieves every time deposit together with its own withdrawals. */
-interface GetAllTimeDepositsUseCase {
-    fun getAll(): List<TimeDepositWithWithdrawals>
-}
-
-class DefaultGetAllTimeDepositsUseCase(
+class GetAllTimeDepositsUseCase(
     private val timeDepositRepository: TimeDepositRepository,
     private val withdrawalRepository: WithdrawalRepository,
-) : GetAllTimeDepositsUseCase {
-    override fun getAll(): List<TimeDepositWithWithdrawals> {
+) {
+    fun getAll(): List<TimeDepositWithWithdrawals> {
         val withdrawalsByTimeDepositId = withdrawalRepository.findAll().groupBy { it.timeDepositId }
+
         return timeDepositRepository.findAll().map { deposit ->
             TimeDepositWithWithdrawals(deposit, withdrawalsByTimeDepositId[deposit.id].orEmpty())
         }

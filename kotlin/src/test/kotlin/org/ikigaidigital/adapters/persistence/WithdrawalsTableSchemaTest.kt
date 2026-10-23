@@ -6,23 +6,17 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
 import org.springframework.jdbc.core.JdbcTemplate
-import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
+import org.testcontainers.postgresql.PostgreSQLContainer
 import java.math.BigDecimal
 import java.sql.Date
 
-/**
- * Proves the `withdrawals` table from README.md Requirement 2 exists with
- * the required columns and enforces its foreign key to time_deposits --
- * nothing in the domain/application layers consumes this table yet, so this
- * pins the schema only.
- */
 class WithdrawalsTableSchemaTest : AbstractPostgresIntegrationTest() {
     companion object {
         @Container
         @ServiceConnection
         @JvmStatic
-        val postgres: PostgreSQLContainer<*> =
+        val postgres: PostgreSQLContainer =
             PostgreSQLContainer("postgres:16")
                 .withDatabaseName("timedeposit")
                 .withUsername("timedeposit")

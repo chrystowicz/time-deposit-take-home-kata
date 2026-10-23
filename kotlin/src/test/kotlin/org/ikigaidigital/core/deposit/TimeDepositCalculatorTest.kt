@@ -1,6 +1,10 @@
-package org.ikigaidigital
+package org.ikigaidigital.core.deposit
 
 import org.assertj.core.api.Assertions.assertThat
+import org.ikigaidigital.TimeDeposit
+import org.ikigaidigital.core.interest.InterestPolicy
+import org.ikigaidigital.core.interest.InterestPolicyResolver
+import org.ikigaidigital.core.utils.CurrencyRounder
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock

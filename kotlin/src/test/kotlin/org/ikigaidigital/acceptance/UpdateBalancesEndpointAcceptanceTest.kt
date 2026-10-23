@@ -1,7 +1,8 @@
-package org.ikigaidigital.adapters.web
+package org.ikigaidigital.acceptance
 
 import org.assertj.core.api.Assertions.assertThat
 import org.ikigaidigital.adapters.AbstractPostgresIntegrationTest
+import org.ikigaidigital.adapters.TimeDepositApplication
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -9,8 +10,9 @@ import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
 import org.springframework.http.HttpStatus
 import org.springframework.jdbc.core.JdbcTemplate
-import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
+import org.testcontainers.postgresql.PostgreSQLContainer
+import java.math.BigDecimal
 
 /**
  * The real vertical slice, end to end: a real HTTP call, against the real
@@ -20,13 +22,13 @@ import org.testcontainers.junit.jupiter.Container
  * the database. This is the single test that proves README Requirement 1's
  * "update the balances of all time deposits in the database" actually works.
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = [TimeDepositApplication::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UpdateBalancesEndpointAcceptanceTest : AbstractPostgresIntegrationTest() {
     companion object {
         @Container
         @ServiceConnection
         @JvmStatic
-        val postgres: PostgreSQLContainer<*> =
+        val postgres: PostgreSQLContainer =
             PostgreSQLContainer("postgres:16")
                 .withDatabaseName("timedeposit")
                 .withUsername("timedeposit")
@@ -57,19 +59,19 @@ class UpdateBalancesEndpointAcceptanceTest : AbstractPostgresIntegrationTest() {
             5000.00,
         )
 
-        val response = restTemplate.postForEntity("/api/v1/time-deposits/balance-updates", null, Void::class.java)
+        val response = restTemplate.postForEntity("/v1/time-deposits/balance-updates", null, Void::class.java)
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.NO_CONTENT)
         val basicBalance =
             jdbcTemplate.queryForObject(
                 "SELECT balance FROM time_deposits WHERE id = ?",
-                java.math.BigDecimal::class.java,
+                BigDecimal::class.java,
                 1,
             )
         val premiumBalance =
             jdbcTemplate.queryForObject(
                 "SELECT balance FROM time_deposits WHERE id = ?",
-                java.math.BigDecimal::class.java,
+                BigDecimal::class.java,
                 2,
             )
         // basic, 31 days: 1000 * 0.01 / 12 = 0.8333... -> rounds to 0.83

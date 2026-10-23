@@ -1,7 +1,8 @@
-package org.ikigaidigital.adapters.web
+package org.ikigaidigital.acceptance
 
 import org.assertj.core.api.Assertions.assertThat
 import org.ikigaidigital.adapters.AbstractPostgresIntegrationTest
+import org.ikigaidigital.adapters.TimeDepositApplication
 import org.ikigaidigital.adapters.web.generated.model.TimeDepositResponse
 import org.ikigaidigital.adapters.web.generated.model.WithdrawalResponse
 import org.junit.jupiter.api.Test
@@ -11,25 +12,18 @@ import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
 import org.springframework.http.HttpStatus
 import org.springframework.jdbc.core.JdbcTemplate
-import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
+import org.testcontainers.postgresql.PostgreSQLContainer
 import java.math.BigDecimal
 import java.time.LocalDate
 
-/**
- * The real vertical slice, end to end: seeds raw rows directly via
- * JdbcTemplate into both time_deposits and withdrawals, calls the actual
- * GET endpoint over HTTP against a real Postgres container, and checks the
- * response body -- proving README Requirement 1's "retrieve all time
- * deposits" (with the withdrawals schema field) actually works.
- */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = [TimeDepositApplication::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class GetAllTimeDepositsEndpointAcceptanceTest : AbstractPostgresIntegrationTest() {
     companion object {
         @Container
         @ServiceConnection
         @JvmStatic
-        val postgres: PostgreSQLContainer<*> =
+        val postgres: PostgreSQLContainer =
             PostgreSQLContainer("postgres:16")
                 .withDatabaseName("timedeposit")
                 .withUsername("timedeposit")
@@ -69,7 +63,7 @@ class GetAllTimeDepositsEndpointAcceptanceTest : AbstractPostgresIntegrationTest
         )
 
         val response =
-            restTemplate.getForEntity("/api/v1/time-deposits", Array<TimeDepositResponse>::class.java)
+            restTemplate.getForEntity("/v1/time-deposits", Array<TimeDepositResponse>::class.java)
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
         val body = response.body!!.toList()

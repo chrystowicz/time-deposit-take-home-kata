@@ -3,14 +3,14 @@ package org.ikigaidigital.adapters.persistence
 import org.assertj.core.api.Assertions.assertThat
 import org.ikigaidigital.TimeDeposit
 import org.ikigaidigital.adapters.AbstractPostgresIntegrationTest
-import org.ikigaidigital.application.TimeDepositRepository
+import org.ikigaidigital.core.deposit.TimeDepositRepository
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
 import org.springframework.jdbc.core.JdbcTemplate
-import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
+import org.testcontainers.postgresql.PostgreSQLContainer
 
 /**
  * Round-trips real rows through a real Postgres instance (Testcontainers),
@@ -24,7 +24,7 @@ class JdbcTimeDepositRepositoryTest : AbstractPostgresIntegrationTest() {
         @Container
         @ServiceConnection
         @JvmStatic
-        val postgres: PostgreSQLContainer<*> =
+        val postgres: PostgreSQLContainer =
             PostgreSQLContainer("postgres:16")
                 .withDatabaseName("timedeposit")
                 .withUsername("timedeposit")

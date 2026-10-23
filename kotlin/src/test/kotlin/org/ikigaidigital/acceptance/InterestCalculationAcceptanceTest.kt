@@ -3,12 +3,15 @@ package org.ikigaidigital.acceptance
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import org.ikigaidigital.TimeDeposit
-import org.ikigaidigital.TimeDepositCalculator
+import org.ikigaidigital.core.deposit.TimeDepositCalculator
+import org.ikigaidigital.core.interest.InterestPolicyResolver
+import org.ikigaidigital.core.utils.HalfUpCurrencyRounder
 
 /**
  * Acceptance tests for README.md's "Interest Calculation" business requirement
- * (Requirement 3), exercised end to end against the real production wiring
- * (TimeDepositCalculator()'s default collaborators, no mocks or stubs).
+ * (Requirement 3), exercised end to end against a real TimeDepositCalculator
+ * and its real collaborators (InterestPolicyResolver, HalfUpCurrencyRounder),
+ * no mocks or stubs.
  *
  * This file is meant to be the single place where every stated interest-rate
  * business rule can be read and seen passing, independent of how the
@@ -27,10 +30,11 @@ import org.ikigaidigital.TimeDepositCalculator
 class InterestCalculationAcceptanceTest :
     BehaviorSpec({
 
-        // TimeDepositCalculator and its default collaborators are stateless; the
-        // only mutable state in play is each test's own TimeDeposit, so sharing
-        // one calculator instance across every Given block below is safe.
-        val calculator = TimeDepositCalculator()
+        val calculator =
+            TimeDepositCalculator(
+                InterestPolicyResolver(),
+                HalfUpCurrencyRounder(),
+            )
 
         Given("no plan earns interest for its first 30 days") {
             When("a brand-new basic plan deposit is 0 days old") {

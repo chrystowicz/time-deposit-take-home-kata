@@ -1,10 +1,7 @@
-package org.ikigaidigital
+package org.ikigaidigital.core.interest
 
-/**
- * Computes the monthly interest earned by a single time deposit, in whole
- * currency units, unrounded. Each plan type has its own policy; an unknown
- * plan type earns no interest (see [NoInterestPolicy]).
- */
+import org.ikigaidigital.TimeDeposit
+
 interface InterestPolicy {
     fun monthlyInterest(deposit: TimeDeposit): Double
 }

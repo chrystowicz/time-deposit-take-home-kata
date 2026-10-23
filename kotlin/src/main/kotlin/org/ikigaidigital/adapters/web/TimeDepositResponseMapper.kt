@@ -1,13 +1,12 @@
 package org.ikigaidigital.adapters.web
 
-import org.ikigaidigital.Withdrawal
 import org.ikigaidigital.adapters.web.generated.model.TimeDepositResponse
 import org.ikigaidigital.adapters.web.generated.model.WithdrawalResponse
-import org.ikigaidigital.application.TimeDepositWithWithdrawals
+import org.ikigaidigital.core.deposit.TimeDepositWithWithdrawals
+import org.ikigaidigital.core.deposit.Withdrawal
 import java.math.BigDecimal
 import java.math.RoundingMode
 
-/** The only place that translates the application read-model into the generated API response shape. */
 fun TimeDepositWithWithdrawals.toResponse(): TimeDepositResponse =
     TimeDepositResponse(
         id = timeDeposit.id,

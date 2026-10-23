@@ -1,24 +1,16 @@
-package org.ikigaidigital.application
+package org.ikigaidigital.core.deposit
 
 import org.ikigaidigital.TimeDeposit
-import org.ikigaidigital.TimeDepositCalculator
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 
-/**
- * UpdateTimeDepositBalancesUseCase's own job is orchestration: load every
- * deposit, hand the whole list to the calculator (which mutates balances in
- * place), then persist that same list back. The calculator's actual interest
- * math is tested elsewhere (InterestPolicyTest, InterestCalculationAcceptanceTest),
- * so this suite mocks both collaborators and verifies the orchestration itself.
- */
 class UpdateTimeDepositBalancesUseCaseTest {
     private val repository = mock<TimeDepositRepository>()
     private val calculator = mock<TimeDepositCalculator>()
-    private val useCase = DefaultUpdateTimeDepositBalancesUseCase(repository, calculator)
+    private val useCase = UpdateTimeDepositBalancesUseCase(repository, calculator)
 
     @Test
     fun `loads every deposit, updates their balances, then saves the same list back`() {

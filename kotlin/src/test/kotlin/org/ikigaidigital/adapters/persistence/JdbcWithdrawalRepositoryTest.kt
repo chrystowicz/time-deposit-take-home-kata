@@ -1,29 +1,24 @@
 package org.ikigaidigital.adapters.persistence
 
 import org.assertj.core.api.Assertions.assertThat
-import org.ikigaidigital.Withdrawal
 import org.ikigaidigital.adapters.AbstractPostgresIntegrationTest
-import org.ikigaidigital.application.WithdrawalRepository
+import org.ikigaidigital.core.deposit.Withdrawal
+import org.ikigaidigital.core.deposit.WithdrawalRepository
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
 import org.springframework.jdbc.core.JdbcTemplate
-import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
+import org.testcontainers.postgresql.PostgreSQLContainer
 import java.time.LocalDate
 
-/**
- * Round-trips real rows through a real Postgres instance (Testcontainers),
- * proving JdbcWithdrawalRepository's SQL actually works -- same pattern as
- * JdbcTimeDepositRepositoryTest.
- */
 class JdbcWithdrawalRepositoryTest : AbstractPostgresIntegrationTest() {
     companion object {
         @Container
         @ServiceConnection
         @JvmStatic
-        val postgres: PostgreSQLContainer<*> =
+        val postgres: PostgreSQLContainer =
             PostgreSQLContainer("postgres:16")
                 .withDatabaseName("timedeposit")
                 .withUsername("timedeposit")

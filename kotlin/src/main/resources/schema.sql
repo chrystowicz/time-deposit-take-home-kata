@@ -6,7 +6,6 @@ CREATE TABLE IF NOT EXISTS time_deposits (
     balance DECIMAL(19, 2) NOT NULL
 );
 
--- Matches README.md Requirement 2's `withdrawals` table definition.
 CREATE TABLE IF NOT EXISTS withdrawals (
     id INTEGER PRIMARY KEY,
     time_deposit_id INTEGER NOT NULL REFERENCES time_deposits (id),

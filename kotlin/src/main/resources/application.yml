@@ -13,4 +13,4 @@ spring:
       mode: always # no migration tool yet; schema.sql is idempotent (CREATE TABLE IF NOT EXISTS)
 
 server:
-  port: ${SERVER_PORT:8080}
+  port: ${SERVER_PORT:8090}

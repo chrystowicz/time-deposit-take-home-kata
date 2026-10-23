@@ -1,14 +1,10 @@
 package org.ikigaidigital.adapters.persistence
 
-import org.ikigaidigital.Withdrawal
-import org.ikigaidigital.application.WithdrawalRepository
+import org.ikigaidigital.core.deposit.Withdrawal
+import org.ikigaidigital.core.deposit.WithdrawalRepository
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 
-/**
- * The only adapter that touches WithdrawalEntity: findAll reads rows as
- * entities then maps each to the domain Withdrawal before returning.
- */
 class JdbcWithdrawalRepository(
     private val jdbcTemplate: JdbcTemplate,
 ) : WithdrawalRepository {

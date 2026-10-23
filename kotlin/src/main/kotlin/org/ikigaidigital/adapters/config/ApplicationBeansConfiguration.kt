@@ -1,24 +1,19 @@
 package org.ikigaidigital.adapters.config
 
-import org.ikigaidigital.TimeDepositCalculator
 import org.ikigaidigital.adapters.persistence.JdbcTimeDepositRepository
 import org.ikigaidigital.adapters.persistence.JdbcWithdrawalRepository
-import org.ikigaidigital.application.DefaultGetAllTimeDepositsUseCase
-import org.ikigaidigital.application.DefaultUpdateTimeDepositBalancesUseCase
-import org.ikigaidigital.application.GetAllTimeDepositsUseCase
-import org.ikigaidigital.application.TimeDepositRepository
-import org.ikigaidigital.application.UpdateTimeDepositBalancesUseCase
-import org.ikigaidigital.application.WithdrawalRepository
+import org.ikigaidigital.core.deposit.GetAllTimeDepositsUseCase
+import org.ikigaidigital.core.deposit.TimeDepositCalculator
+import org.ikigaidigital.core.deposit.TimeDepositRepository
+import org.ikigaidigital.core.deposit.UpdateTimeDepositBalancesUseCase
+import org.ikigaidigital.core.deposit.WithdrawalRepository
+import org.ikigaidigital.core.interest.InterestPolicyResolver
+import org.ikigaidigital.core.utils.CurrencyRounder
+import org.ikigaidigital.core.utils.HalfUpCurrencyRounder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.jdbc.core.JdbcTemplate
 
-/**
- * Decides which concrete implementation backs each application-layer
- * interface, same pattern as DomainBeansConfiguration: everything outside
- * this class depends only on TimeDepositRepository/UpdateTimeDepositBalancesUseCase,
- * never on JdbcTimeDepositRepository/DefaultUpdateTimeDepositBalancesUseCase directly.
- */
 @Configuration
 class ApplicationBeansConfiguration {
     @Bean
@@ -28,14 +23,30 @@ class ApplicationBeansConfiguration {
     fun withdrawalRepository(jdbcTemplate: JdbcTemplate): WithdrawalRepository = JdbcWithdrawalRepository(jdbcTemplate)
 
     @Bean
+    fun interestPolicyResolver(): InterestPolicyResolver = InterestPolicyResolver()
+
+    @Bean
+    fun currencyRounder(): CurrencyRounder = HalfUpCurrencyRounder()
+
+    @Bean
+    fun timeDepositCalculator(
+        interestPolicyResolver: InterestPolicyResolver,
+        currencyRounder: CurrencyRounder,
+    ): TimeDepositCalculator =
+        TimeDepositCalculator(
+            interestPolicyResolver,
+            currencyRounder,
+        )
+
+    @Bean
     fun updateTimeDepositBalancesUseCase(
         timeDepositRepository: TimeDepositRepository,
         timeDepositCalculator: TimeDepositCalculator,
-    ): UpdateTimeDepositBalancesUseCase = DefaultUpdateTimeDepositBalancesUseCase(timeDepositRepository, timeDepositCalculator)
+    ): UpdateTimeDepositBalancesUseCase = UpdateTimeDepositBalancesUseCase(timeDepositRepository, timeDepositCalculator)
 
     @Bean
     fun getAllTimeDepositsUseCase(
         timeDepositRepository: TimeDepositRepository,
         withdrawalRepository: WithdrawalRepository,
-    ): GetAllTimeDepositsUseCase = DefaultGetAllTimeDepositsUseCase(timeDepositRepository, withdrawalRepository)
+    ): GetAllTimeDepositsUseCase = GetAllTimeDepositsUseCase(timeDepositRepository, withdrawalRepository)
 }

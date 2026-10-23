@@ -1,17 +1,10 @@
 package org.ikigaidigital.adapters.persistence
 
 import org.ikigaidigital.TimeDeposit
-import org.ikigaidigital.application.TimeDepositRepository
+import org.ikigaidigital.core.deposit.TimeDepositRepository
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 
-/**
- * The only adapter that touches TimeDepositEntity: findAll reads rows as
- * entities then maps each to the domain TimeDeposit before returning, and
- * saveAll maps each domain TimeDeposit to an entity before writing. Nothing
- * outside this class -- including the TimeDepositRepository port it
- * implements -- ever sees TimeDepositEntity.
- */
 class JdbcTimeDepositRepository(
     private val jdbcTemplate: JdbcTemplate,
 ) : TimeDepositRepository {
@@ -22,8 +15,7 @@ class JdbcTimeDepositRepository(
 
     override fun saveAll(deposits: List<TimeDeposit>) {
         // Row-by-row, no batching, and an update matching zero rows (e.g. the
-        // row was deleted between findAll and saveAll) is silently ignored --
-        // acceptable for this task's scaffolding-level scope.
+        // row was deleted between findAll and saveAll) is silently ignored
         for (deposit in deposits) {
             val entity = deposit.toEntity()
             jdbcTemplate.update(

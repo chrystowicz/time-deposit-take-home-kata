@@ -1,8 +1,7 @@
 package org.ikigaidigital.adapters.persistence
 
-import org.ikigaidigital.Withdrawal
+import org.ikigaidigital.core.deposit.Withdrawal
 
-/** The only place that translates between WithdrawalEntity and Withdrawal. */
 fun WithdrawalEntity.toDomain(): Withdrawal =
     Withdrawal(
         id = id,

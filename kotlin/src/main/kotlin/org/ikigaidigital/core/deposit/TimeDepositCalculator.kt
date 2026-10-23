@@ -1,8 +1,12 @@
-package org.ikigaidigital
+package org.ikigaidigital.core.deposit
+
+import org.ikigaidigital.TimeDeposit
+import org.ikigaidigital.core.interest.InterestPolicyResolver
+import org.ikigaidigital.core.utils.CurrencyRounder
 
 class TimeDepositCalculator(
-    private val policyResolver: InterestPolicyResolver = PlanTypeInterestPolicyResolver(),
-    private val currencyRounder: CurrencyRounder = HalfUpCurrencyRounder(),
+    private val policyResolver: InterestPolicyResolver,
+    private val currencyRounder: CurrencyRounder,
 ) {
     fun updateBalance(xs: List<TimeDeposit>) {
         for (deposit in xs) {

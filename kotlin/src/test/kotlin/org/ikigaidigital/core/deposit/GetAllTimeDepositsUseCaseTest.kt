@@ -1,23 +1,16 @@
-package org.ikigaidigital.application
+package org.ikigaidigital.core.deposit
 
 import org.assertj.core.api.Assertions.assertThat
 import org.ikigaidigital.TimeDeposit
-import org.ikigaidigital.Withdrawal
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import java.time.LocalDate
 
-/**
- * GetAllTimeDepositsUseCase's job is pure composition: load every deposit
- * and every withdrawal, then group each deposit with the withdrawals that
- * reference it. Both collaborators are mocked; the grouping is the only
- * behavior under test here.
- */
 class GetAllTimeDepositsUseCaseTest {
     private val timeDepositRepository = mock<TimeDepositRepository>()
     private val withdrawalRepository = mock<WithdrawalRepository>()
-    private val useCase = DefaultGetAllTimeDepositsUseCase(timeDepositRepository, withdrawalRepository)
+    private val useCase = GetAllTimeDepositsUseCase(timeDepositRepository, withdrawalRepository)
 
     @Test
     fun `groups each time deposit with only the withdrawals that reference it`() {
