@@ -18,6 +18,7 @@ Kotlin 2.x, Spring Boot 3, Gradle Kotlin DSL, JUnit 5, Testcontainers.
 - Never edit generated files or anything under build/.
 - After each change, run the tests and report the result honestly. If a test fails, say so.
 - Small commits with conventional-commit messages.
+- Prioritize improving the local development environment before introducing additional checks for issues such as third-party dependency updates
 
 ## Hard constraints
 - `TimeDeposit.kt` is a shared class used by other consumers. Do not introduce breaking changes:
