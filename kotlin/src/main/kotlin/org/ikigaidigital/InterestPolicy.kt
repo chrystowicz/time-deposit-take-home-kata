@@ -17,7 +17,7 @@ object BasicInterestPolicy : InterestPolicy {
 /** 3% annual interest, monthly, only while the deposit is between 31 and 365 days old. */
 object StudentInterestPolicy : InterestPolicy {
     override fun monthlyInterest(deposit: TimeDeposit): Double =
-        if (deposit.days > 30 && deposit.days < 366) deposit.balance * 0.03 / 12 else 0.0
+        if (deposit.days in 31..<366) deposit.balance * 0.03 / 12 else 0.0
 }
 
 /** 5% annual interest, monthly, once the deposit is older than 45 days. */
